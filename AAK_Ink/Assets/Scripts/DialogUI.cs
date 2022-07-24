@@ -9,7 +9,6 @@ public class DialogUI : MonoBehaviour
 {
     public static DialogUI Instance;
 
-    public Image Portrait;
     public TMPro.TMP_Text Text;
     public GameObject Options;
     public float CharacterDelay = 0.01f;
@@ -21,11 +20,12 @@ public class DialogUI : MonoBehaviour
 
     private string _currentLine;
     private Coroutine _currentShowLine;
+    private bool _isEnding;
 
     private void Awake()
     {
         Instance = this;
-
+        
         _optionPrefab = Options.GetComponentInChildren<Button>();
         _optionPrefab.gameObject.SetActive(false);
 
@@ -42,12 +42,24 @@ public class DialogUI : MonoBehaviour
         Continue();
     }
 
+    public void Hide()
+    {
+        StopAllCoroutines();
+
+        _story = null;
+        _finished = null;
+
+        _currentLine = null;
+        _currentShowLine = null;
+        _isEnding = false;
+
+        gameObject.SetActive(false);
+    }
+
     public void Continue()
     {
         if (_story.currentChoices.Count > 0)
-        {
             return;
-        }
 
         if (_currentShowLine != null)
         {
@@ -57,22 +69,19 @@ public class DialogUI : MonoBehaviour
             return;
         }
 
-        if (_story.canContinue)
+        if (_story.canContinue && !_isEnding)
         {
             _currentLine = _story.Continue();
+            _isEnding = _story.currentTags.Contains("EndAction");
             StartCoroutine(showLine());
         }
         else
         {
-            _finished?.Invoke();
+            _finished.Invoke();
 
-            _story = null;
-            _finished = null;
-
-            gameObject.SetActive(false);
+            Hide();
         }
     }
-
     private IEnumerator showLine()
     {
         Text.text = _currentLine;
