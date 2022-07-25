@@ -16,6 +16,7 @@ public class DialogUI : MonoBehaviour
     private Button _optionPrefab;
 
     private Story _story;
+    private Action _continued;
     private Action _finished;
 
     private string _currentLine;
@@ -25,18 +26,19 @@ public class DialogUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
+
         _optionPrefab = Options.GetComponentInChildren<Button>();
         _optionPrefab.gameObject.SetActive(false);
 
         gameObject.SetActive(false);
     }
 
-    public void Show(Story story, Action finished)
+    public void Show(Story story, Action continued, Action finished)
     {
         gameObject.SetActive(true);
 
         _story = story;
+        _continued = continued;
         _finished = finished;
 
         Continue();
@@ -73,7 +75,8 @@ public class DialogUI : MonoBehaviour
         {
             _currentLine = _story.Continue();
             _isEnding = _story.currentTags.Contains("EndAction");
-            StartCoroutine(showLine());
+            _currentShowLine = StartCoroutine(showLine());
+            _continued();
         }
         else
         {
@@ -94,6 +97,7 @@ public class DialogUI : MonoBehaviour
         }
 
         finishLine();
+        _currentShowLine = null;
     }
     private void finishLine()
     {

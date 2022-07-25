@@ -7,5 +7,5 @@ How far the dialog has progressed is persisted by the persister set in the State
 ===ENDED===
 this line will be shown if the action is started after the story has ended because the knot has been set as the ResetKnot on the InkAction
 it could contain something like 'I have nothing more to say to you!' or 'Goodbye!'
-if the ResetKnot is empty the action can no longer be started if the story has ended
+if the state is persisted and EndingMode is None the action can no longer be started if the story has ended
 ->DONE
