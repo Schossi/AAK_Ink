@@ -90,9 +90,24 @@ public class DialogUI : MonoBehaviour
         Text.text = _currentLine;
         Text.maxVisibleCharacters = 0;
 
+        var isTag=false;
+
         for (int i = 0; i < _currentLine.Length; i++)
         {
-            yield return new WaitForSeconds(CharacterDelay);
+            if (isTag)
+            {
+                if (_currentLine[i] == '>')
+                    isTag = false;
+            }
+            else if (_currentLine[i] == '<')
+            {
+                isTag = true;
+            }
+            else
+            {
+                yield return new WaitForSeconds(CharacterDelay);
+            }
+
             Text.maxVisibleCharacters++;
         }
 

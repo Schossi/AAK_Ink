@@ -6,8 +6,8 @@ EXTERNAL CanRemoveItems(key,quantity)
 EXTERNAL AddItems(key,quantity)
 EXTERNAL RemoveItems(key,quantity)
 
-It is possible to add items to a characters inventory using AddItems(key,quantity)
-It might be wise to check CanAddItems(key,quantity) first if the inventory has limited space for example
+It is possible to add items to a characters inventory using <color=blue>AddItems(key,quantity)</color>
+It might be wise to check <color=blue>CanAddItems(key,quantity)</color> first if the inventory has limited space for example
 { CanAddItems("i",1): -> add | -> abort }
 
 === add ===

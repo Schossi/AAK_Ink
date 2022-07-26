@@ -2,8 +2,8 @@ EXTERNAL HasEffect(key)
 EXTERNAL AddEffect(key)
 EXTERNAL RemoveEffect(key)
 
-It is possible to remove effects to a characters using RemoveEffect(key)
-There are also variants for the effect functions that let you specify the character(for example HasCharacterEffect(character,key))
+It is possible to remove effects to a characters using <color=blue>RemoveEffect(key)</color>
+There are also variants for the effect functions that let you specify the character(for example <color=blue>HasCharacterEffect(character,key)</color>)
 { HasEffect("e"): -> remove | -> abort }
 
 === remove ===

@@ -1,6 +1,6 @@
 this example demonstrates the use of InkAction in a scenario similar to souls games
 whenever used the action shows another chunk of dialog until it eventually runs out and keeps repeating the same one #EndAction
-The different chunks of dialog are seperated by the EndAction tag #EndAction
+The different chunks of dialog are seperated by the <color=red>EndAction</color> tag #EndAction
 How far the dialog has progressed is persisted by the persister set in the StatePersister field #EndAction
 ->END
 

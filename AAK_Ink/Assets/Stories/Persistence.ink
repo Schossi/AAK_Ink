@@ -1,7 +1,7 @@
 EXTERNAL GetPersistedInt(name)
 EXTERNAL SetPersistedInt(name,value)
 
-The external functions GetPersistedBool(name) and SetPersistedBool(name,value) can be used to interact with the persistence system.
+The external functions <color=blue>GetPersistedBool(name)</color> and <color=blue>SetPersistedBool(name,value)</color> can be used to interact with the persistence system.
 This is useful to share values between different stories or to change the rest of the game depending on choices made in Ink.
 There are also variants of the method for Int, Float and String values.
 
