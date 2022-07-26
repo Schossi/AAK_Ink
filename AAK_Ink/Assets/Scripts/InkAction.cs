@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class InkAction : CharacterActionBase
 {
-    public enum InkEndingMode { None, Reset, ResetKnot }
+    public enum InkEndingMode { None = 0, Reset = 5, ResetKnot = 10 }
 
     public TextAsset InkAsset;
     public CharacterBase[] Characters;
     public PersisterBase StatePersister;
+    public PersisterBase FunctionPersister;
     [Header("Ending")]
-    public InkEndingMode EndingMode;
+    public InkEndingMode EndingMode = InkEndingMode.Reset;
     public string EndingModeParameter;
 
     public CharacterBase CurrentCharacter { get; private set; }
@@ -47,9 +48,24 @@ public class InkAction : CharacterActionBase
 
             _story.BindExternalFunction("OnCharacterMessages", (int character, string messages) => getCharacter(character).OnMessages(messages));
 
-            if (StatePersister && StatePersister.Check())
-                _story.state.LoadJson(StatePersister.Get<string>());
+            _story.BindExternalFunction("GetPersistedBool", (string key) => FunctionPersister.Get<bool>(key));
+            _story.BindExternalFunction("SetPersistedBool", (string key, bool value) => FunctionPersister.Set(value, key));
+
+            _story.BindExternalFunction("GetPersistedInt", (string key) => FunctionPersister.Get<int>(key));
+            _story.BindExternalFunction("SetPersistedInt", (string key, int value) => FunctionPersister.Set(value, key));
+
+            _story.BindExternalFunction("GetPersistedFloat", (string key) => FunctionPersister.Get<float>(key));
+            _story.BindExternalFunction("SetPersistedFloat", (string key, float value) => FunctionPersister.Set(value, key));
+
+            _story.BindExternalFunction("GetPersistedString", (string key) => FunctionPersister.Get<string>(key));
+            _story.BindExternalFunction("SetPersistedString", (string key, string value) => FunctionPersister.Set(value, key));
         }
+
+        //reload always in case the state has been changed elsewhere
+        //that makes it possible to share state between actions with the same story
+        //if that is never the case this may be moved up a couple lines into story init
+        if (StatePersister && StatePersister.Check())
+            _story.state.LoadJson(StatePersister.Get<string>());
 
         DialogUI.Instance.Show(_story, storyContinued, EndAction);
     }
