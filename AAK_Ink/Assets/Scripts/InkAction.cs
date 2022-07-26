@@ -176,6 +176,20 @@ public class InkAction : CharacterActionBase
         story.BindExternalFunction("AddCharacterItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.AddItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
         story.BindExternalFunction("RemoveCharacterItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.RemoveItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
 
+        //EFFECTS
+
+        story.BindExternalFunction("HasEffect", (string key) => Actor.Character.EffectPool.HasEffect(Effects.GetEffect(key)));
+
+        story.BindExternalFunction("AddEffect", (string key) => { Actor.Character.EffectPool.Add(Effects.GetEffect(key)); });
+        story.BindExternalFunction("RemoveEffect", (string key) => { Actor.Character.EffectPool.Remove(Effects.GetEffect(key)); });
+
+        //EFFECTS BY CHAR
+
+        story.BindExternalFunction("HasCharacterEffect", (int character, string key) => getCharacter(character).EffectPool.HasEffect(Effects.GetEffect(key)));
+
+        story.BindExternalFunction("AddCharacterEffect", (int character, string key) => { getCharacter(character).EffectPool.Add(Effects.GetEffect(key)); });
+        story.BindExternalFunction("RemoveCharacterEffect", (int character, string key) => { getCharacter(character).EffectPool.Remove(Effects.GetEffect(key)); });
+
         return story;
     }
 
