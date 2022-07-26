@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c856f70a30ce8f542a276e622e33b4ca, type: 3}
-  m_Name: Items
+  m_Script: {fileID: 11500000, guid: 7f3c057be60526e438833c486ef3486c, type: 3}
+  m_Name: Item
   m_EditorClassIdentifier: 
-  Items:
-  - {fileID: 11400000, guid: 66301315ba92a444d88a5781eb9372bb, type: 2}
+  Key: i
+  Name: Item
+  Description: 
+  Image: {fileID: 0}
+  Category: {fileID: 0}
+  Slot: {fileID: 0}
+  Stackable: 1

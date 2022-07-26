@@ -14,6 +14,9 @@ public class InkAction : CharacterActionBase
     [Header("Ending")]
     public InkEndingMode EndingMode = InkEndingMode.Reset;
     public string EndingModeParameter;
+    [Header("Sets")]
+    public ItemSet Items;
+    public EffectSet Effects;
 
     public CharacterBase CurrentCharacter { get; private set; }
 
@@ -33,37 +36,11 @@ public class InkAction : CharacterActionBase
         base.OnStart(actor, jumpStart);
 
         if (_story == null)
-        {
-            _story = new Story(InkAsset.text);
-
-            _story.BindExternalFunction("SetBool", (string name, bool value) => setBool(Animator.StringToHash(name), value));
-            _story.BindExternalFunction("SetInt", (string name, int value) => setInt(Animator.StringToHash(name), value));
-            _story.BindExternalFunction("SetFloat", (string name, float value) => setFloat(Animator.StringToHash(name), value));
-
-            _story.BindExternalFunction("OnMessages", (string messages) => Actor.Character.OnMessages(messages));
-
-            _story.BindExternalFunction("SetCharacterBool", (int character, string name, bool value) => getCharacter(character).SetBool(Animator.StringToHash(name), value));
-            _story.BindExternalFunction("SetCharacterInt", (int character, string name, int value) => getCharacter(character).SetInt(Animator.StringToHash(name), value));
-            _story.BindExternalFunction("SetCharacterFloat", (int character, string name, float value) => getCharacter(character).SetFloat(Animator.StringToHash(name), value));
-
-            _story.BindExternalFunction("OnCharacterMessages", (int character, string messages) => getCharacter(character).OnMessages(messages));
-
-            _story.BindExternalFunction("GetPersistedBool", (string key) => FunctionPersister.Get<bool>(key));
-            _story.BindExternalFunction("SetPersistedBool", (string key, bool value) => FunctionPersister.Set(value, key));
-
-            _story.BindExternalFunction("GetPersistedInt", (string key) => FunctionPersister.Get<int>(key));
-            _story.BindExternalFunction("SetPersistedInt", (string key, int value) => FunctionPersister.Set(value, key));
-
-            _story.BindExternalFunction("GetPersistedFloat", (string key) => FunctionPersister.Get<float>(key));
-            _story.BindExternalFunction("SetPersistedFloat", (string key, float value) => FunctionPersister.Set(value, key));
-
-            _story.BindExternalFunction("GetPersistedString", (string key) => FunctionPersister.Get<string>(key));
-            _story.BindExternalFunction("SetPersistedString", (string key, string value) => FunctionPersister.Set(value, key));
-        }
+            _story = createStory();
 
         //reload always in case the state has been changed elsewhere
         //that makes it possible to share state between actions with the same story
-        //if that is never the case this may be moved up a couple lines into story init
+        //if that is never the case this may be moved into createStory
         if (StatePersister && StatePersister.Check())
             _story.state.LoadJson(StatePersister.Get<string>());
 
@@ -143,6 +120,63 @@ public class InkAction : CharacterActionBase
                 }
             }
         }
+    }
+
+    protected virtual Story createStory()
+    {
+        var story = new Story(InkAsset.text);
+
+        //GENERAL
+
+        story.BindExternalFunction("SetBool", (string name, bool value) => setBool(Animator.StringToHash(name), value));
+        story.BindExternalFunction("SetInt", (string name, int value) => setInt(Animator.StringToHash(name), value));
+        story.BindExternalFunction("SetFloat", (string name, float value) => setFloat(Animator.StringToHash(name), value));
+
+        story.BindExternalFunction("OnMessages", (string messages) => Actor.Character.OnMessages(messages));
+
+        //GENERAL BY CHAR
+
+        story.BindExternalFunction("SetCharacterBool", (int character, string name, bool value) => getCharacter(character).SetBool(Animator.StringToHash(name), value));
+        story.BindExternalFunction("SetCharacterInt", (int character, string name, int value) => getCharacter(character).SetInt(Animator.StringToHash(name), value));
+        story.BindExternalFunction("SetCharacterFloat", (int character, string name, float value) => getCharacter(character).SetFloat(Animator.StringToHash(name), value));
+
+        story.BindExternalFunction("OnCharacterMessages", (int character, string messages) => getCharacter(character).OnMessages(messages));
+
+        //PERSISTENCE
+
+        story.BindExternalFunction("GetPersistedBool", (string key) => FunctionPersister.Get<bool>(key));
+        story.BindExternalFunction("SetPersistedBool", (string key, bool value) => FunctionPersister.Set(value, key));
+
+        story.BindExternalFunction("GetPersistedInt", (string key) => FunctionPersister.Get<int>(key));
+        story.BindExternalFunction("SetPersistedInt", (string key, int value) => FunctionPersister.Set(value, key));
+
+        story.BindExternalFunction("GetPersistedFloat", (string key) => FunctionPersister.Get<float>(key));
+        story.BindExternalFunction("SetPersistedFloat", (string key, float value) => FunctionPersister.Set(value, key));
+
+        story.BindExternalFunction("GetPersistedString", (string key) => FunctionPersister.Get<string>(key));
+        story.BindExternalFunction("SetPersistedString", (string key, string value) => FunctionPersister.Set(value, key));
+
+        //ITEMS
+
+        story.BindExternalFunction("GetItemQuantity", (string key) => Actor.Character.InventoryBase.GetQuantity(Items.GetItem(key)));
+
+        story.BindExternalFunction("CanAddItems", (string key, int quantity) => Actor.Character.InventoryBase.CanAddItems(new ItemQuantity(Items.GetItem(key), quantity)));
+        story.BindExternalFunction("CanRemoveItems", (string key, int quantity) => Actor.Character.InventoryBase.CanRemoveItems(new ItemQuantity(Items.GetItem(key), quantity)));
+
+        story.BindExternalFunction("AddItems", (string key, int quantity) => Actor.Character.InventoryBase.AddItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
+        story.BindExternalFunction("RemoveItems", (string key, int quantity) => Actor.Character.InventoryBase.RemoveItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
+
+        //ITEMS BY CHAR
+
+        story.BindExternalFunction("GetCharacterItemQuantity", (int character, string key) => getCharacter(character).InventoryBase.GetQuantity(Items.GetItem(key)));
+
+        story.BindExternalFunction("CanCharacterAddItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.CanAddItems(new ItemQuantity(Items.GetItem(key), quantity)));
+        story.BindExternalFunction("CanCharacterRemoveItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.CanRemoveItems(new ItemQuantity(Items.GetItem(key), quantity)));
+
+        story.BindExternalFunction("AddCharacterItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.AddItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
+        story.BindExternalFunction("RemoveCharacterItems", (int character, string key, int quantity) => getCharacter(character).InventoryBase.RemoveItems(new ItemQuantity(Items.GetItem(key), quantity))?.Quantity ?? 0);
+
+        return story;
     }
 
     protected void memorizeAlignments()
