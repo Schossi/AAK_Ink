@@ -23,6 +23,23 @@ public class InkAction : CharacterActionBase
     private Story _story;
     private Vector3[] _memorizedAlignments;
 
+    private void Start()
+    {
+        _story = createStory();
+
+        if (StatePersister && StatePersister.Check())
+            _story.state.LoadJson(StatePersister.Get<string>());
+    }
+
+    public void StartActionProxied(CharacterActorBase actor, CharacterBase[] characters, string path)
+    {
+        Characters = characters;
+        if (_story == null)
+            _story = createStory();
+        _story.ChoosePathString(path);
+        StartAction(actor);
+    }
+
     public override bool CanStart(CharacterActorBase actor)
     {
         if (_story != null && !_story.canContinue)
@@ -34,15 +51,6 @@ public class InkAction : CharacterActionBase
     public override void OnStart(CharacterActorBase actor, bool jumpStart = false)
     {
         base.OnStart(actor, jumpStart);
-
-        if (_story == null)
-            _story = createStory();
-
-        //reload always in case the state has been changed elsewhere
-        //that makes it possible to share state between actions with the same story
-        //if that is never the case this may be moved into createStory
-        if (StatePersister && StatePersister.Check())
-            _story.state.LoadJson(StatePersister.Get<string>());
 
         DialogUI.Instance.Show(_story, storyContinued, EndAction);
     }
