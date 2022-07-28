@@ -5,12 +5,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+/// <summary>
+/// simple singleton dialog UI that displays an Ink Stories line by line and char by char and displays buttons for choices if they occur
+/// </summary>
 public class DialogUI : MonoBehaviour
 {
     public static DialogUI Instance;
 
+    [Tooltip("the text field that will contain the stories lines")]
     public TMPro.TMP_Text Text;
+    [Tooltip("parent object for eventual choices, has to contain one button that is used as the template for choices")]
     public GameObject Options;
+    [Tooltip("delay between displaying characters, increase to slow text down")]
     public float CharacterDelay = 0.01f;
 
     private Button _optionPrefab;

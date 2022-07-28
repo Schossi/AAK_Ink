@@ -4,6 +4,9 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/// <summary>
+/// minimal demo character
+/// </summary>
 public class PlayerCharacter : CharacterBaseTyped<MinimalCharacterActor, CharacterControllerMovement, ListedInventory>
 {
     [Header("Interaction")]

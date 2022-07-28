@@ -3,19 +3,35 @@ using Ink.Runtime;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// character action that displays an Ink Story in the DialogUI<br/>
+/// provides various functions for the story to interact with the involved characters
+/// </summary>
 public class InkAction : CharacterActionBase
 {
     public enum InkEndingMode { None = 0, Reset = 5, ResetKnot = 10 }
 
+    [Tooltip("compiled version of the ink story that will be used by this action")]
     public TextAsset InkAsset;
+    [Tooltip(@"characters involved in the action(other than the one executing it)
+various functions use a character index, 0 is the executing one, after that are the ones specified here")]
     public CharacterBase[] Characters;
+    [Tooltip("optional persister that is used to save and load the story state")]
     public PersisterBase StatePersister;
+    [Tooltip("persister used when persistence is called from the ink story")]
     public PersisterBase FunctionPersister;
     [Header("Ending")]
+    [Tooltip(@"what to do if the story reaches its end
+None      Nothing
+Reset     Reset the story completely
+ResetKnot Move to the knot in EndingModeParameter")]
     public InkEndingMode EndingMode = InkEndingMode.Reset;
+    [Tooltip("the knot to move to when EndingMode is ResetKnot")]
     public string EndingModeParameter;
     [Header("Sets")]
+    [Tooltip("necessary when the story manipulates items to retrieve the items by its key")]
     public ItemSet Items;
+    [Tooltip("necessary when the story manipulates effects to retrieve the effect by its key")]
     public EffectSet Effects;
 
     public CharacterBase CurrentCharacter { get; private set; }
