@@ -6,7 +6,7 @@
 ## Setup
 
 The packages are not included in this repository and have to be downloaded separately so after cloning the project will be missing the Ink and SoftLeitner folders.  
-![project structure](project.PNG)  
+![project structure](docs/project.PNG)  
 You only need the AdventureCore folder from AAK for this integration demo. Download it from the [asset store](https://assetstore.unity.com/packages/templates/systems/action-adventure-kit-217284) or copy it from another project you have previously used it in if you want to avoid the errors when opening a project that is missing a lot of its files. 
 
 The unity integration for ink can also be found on the [asset store](https://assetstore.unity.com/packages/tools/integration/ink-unity-integration-60055) and downloaded directly or as a UPM package as described on [github](https://github.com/inkle/ink-unity-integration)
