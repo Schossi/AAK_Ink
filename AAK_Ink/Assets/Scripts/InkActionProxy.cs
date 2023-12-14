@@ -17,9 +17,10 @@ namespace Assets.Scripts
         [Tooltip("the knot the main ink story is moved to when the proxy is started")]
         public string Path;
 
-        public override void StartAction(CharacterActorBase actor, bool jumpStart = false, bool force = false)
+        public override bool StartAction(CharacterActorBase actor, bool jumpStart = false, bool force = false)
         {
             InkAction.StartActionProxied(actor, Characters, Path);
+            return true;
         }
     }
 }
